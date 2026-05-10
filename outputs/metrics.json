@@ -1,0 +1,31 @@
+{
+  "dataset": {
+    "source": "synthetic",
+    "n_samples": 900,
+    "n_anomalies": 45,
+    "contamination": 0.05,
+    "random_state": 42
+  },
+  "metrics": {
+    "Isolation Forest": {
+      "pr_auc": 0.9953464348702445,
+      "roc_auc": 0.9997400909681612,
+      "precision_at_k": 0.9555555555555556
+    },
+    "One-Class SVM": {
+      "pr_auc": 0.5762495586071138,
+      "roc_auc": 0.9391812865497076,
+      "precision_at_k": 0.4222222222222222
+    },
+    "Local Outlier Factor": {
+      "pr_auc": 0.11524401320299604,
+      "roc_auc": 0.40543209876543207,
+      "precision_at_k": 0.1111111111111111
+    },
+    "Robust Z-Score": {
+      "pr_auc": 0.9743433583395901,
+      "roc_auc": 0.9987264457439896,
+      "precision_at_k": 0.8888888888888888
+    }
+  }
+}

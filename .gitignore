@@ -10,3 +10,6 @@ __pycache__/
 
 outputs/*
 !outputs/.gitkeep
+!outputs/metrics.json
+!outputs/precision_recall.png
+!outputs/score_distribution.png
