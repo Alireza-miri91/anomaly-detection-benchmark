@@ -7,6 +7,11 @@
     "random_state": 42
   },
   "metrics": {
+    "adADMIRE": {
+      "pr_auc": 0.6368138404674375,
+      "roc_auc": 0.9353216374269007,
+      "precision_at_k": 0.6666666666666666
+    },
     "Isolation Forest": {
       "pr_auc": 0.9953464348702445,
       "roc_auc": 0.9997400909681612,

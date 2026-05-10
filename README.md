@@ -6,7 +6,7 @@ This is a small, public-safe anomaly-detection demo for mixed tabular data. It m
 
 - Synthetic mixed-tabular data generation with numeric and categorical features.
 - Injected anomalies with known labels for fair evaluation.
-- Comparison of Isolation Forest, One-Class SVM, Local Outlier Factor, and a robust z-score baseline.
+- Comparison of public `adADMIRE`, Isolation Forest, One-Class SVM, Local Outlier Factor, and a robust z-score baseline.
 - Imbalanced evaluation with PR-AUC, ROC-AUC, and Precision@k.
 - Reproducible outputs saved as JSON and plots.
 
@@ -41,6 +41,8 @@ pip install -r requirements.txt
 python src/main.py
 ```
 
+The default run includes `adADMIRE`, which performs leave-one-out model fitting and may take around one to two minutes on a laptop.
+
 Optional arguments:
 
 ```bash
@@ -59,4 +61,4 @@ The script prints a compact metric table and writes:
 
 ## Public-Safe Scope
 
-The feature names are clinical-style, but all values are generated from simple random distributions. This repository intentionally does not include ADMIRE source material, private lab files, real clinical records, course datasets, notebooks, or generated research artifacts.
+The feature names are clinical-style, but all values are generated from simple random distributions. This repository uses the public MIT-licensed `adadmire` package from Spang Lab and intentionally does not include private lab files, real clinical records, course datasets, notebooks, or generated research artifacts.

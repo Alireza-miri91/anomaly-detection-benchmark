@@ -1,7 +1,11 @@
 from __future__ import annotations
 
+import contextlib
+import io
+
 import numpy as np
 import pandas as pd
+from adadmire import admire, penalty
 from sklearn.compose import ColumnTransformer
 from sklearn.ensemble import IsolationForest
 from sklearn.neighbors import LocalOutlierFactor
@@ -30,6 +34,37 @@ def robust_zscore_scores(data: pd.DataFrame) -> np.ndarray:
     return zscores.max(axis=1)
 
 
+def adadmire_scores(data: pd.DataFrame) -> np.ndarray:
+    """Run public adADMIRE and convert flagged cell positions into row scores."""
+    numeric = StandardScaler().fit_transform(data[NUMERIC_FEATURES])
+
+    encoder = OneHotEncoder(sparse_output=False, handle_unknown="ignore")
+    discrete = encoder.fit_transform(data[CATEGORICAL_FEATURES])
+    levels = np.array([len(categories) for categories in encoder.categories_])
+
+    lambda_sequence = penalty(numeric, discrete, min=-2.25, max=-1.5, step=0.25)
+    with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
+        _, n_cont, position_cont, _, n_disc, position_disc = admire(
+            numeric,
+            discrete,
+            levels,
+            lambda_sequence,
+            oIterations=1000,
+        )
+
+    scores = np.zeros(data.shape[0], dtype=float)
+    if n_cont:
+        continuous_positions = np.asarray(position_cont)
+        continuous_rows = continuous_positions[:, 0].astype(int)
+        np.add.at(scores, continuous_rows, 1.0)
+    if n_disc:
+        discrete_positions = np.asarray(position_disc)
+        discrete_rows = discrete_positions[0, :].astype(int)
+        np.add.at(scores, discrete_rows, 1.0)
+
+    return scores
+
+
 def run_anomaly_methods(
     data: pd.DataFrame,
     contamination: float,
@@ -37,6 +72,8 @@ def run_anomaly_methods(
 ) -> dict[str, np.ndarray]:
     """Fit anomaly detectors and return scores where higher means more anomalous."""
     methods: dict[str, np.ndarray] = {}
+
+    methods["adADMIRE"] = adadmire_scores(data)
 
     isolation_forest = Pipeline(
         steps=[
